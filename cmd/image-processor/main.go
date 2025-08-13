@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"imageProcessor/internal/config"
 	"imageProcessor/internal/http-server/handlers/image/deleteImage"
 	"imageProcessor/internal/http-server/handlers/image/getImage"
@@ -20,6 +21,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	_ "imageProcessor/docs"
 )
 
 const (
@@ -28,6 +31,11 @@ const (
 	envProd  = "prod"
 )
 
+// @title           Image Processor API
+// @version         1.0
+// @description     This is a sample image processing API.
+// @host            localhost:8075
+// @BasePath        /
 func main() {
 	cfg := config.MustLoad()
 
@@ -70,6 +78,10 @@ func main() {
 	router.Handle("/processed/*", http.StripPrefix("/processed/", http.FileServer(http.Dir("./processed"))))
 
 	router.Handle("/uploads/*", http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads"))))
+
+	router.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8075/swagger/doc.json"),
+	))
 
 	router.Post("/upload", saveImage.New(log, storage, kafkaProducer))
 	router.Get("/image/{id}", getImage.New(log, storage))

@@ -59,13 +59,13 @@
     <h1>Image Processor Service UI</h1>
 
     <div class="section">
-        <h2>1. Загрузить изображение (POST /upload)</h2>
+        <h2>1. Загрузить изображение</h2>
         <input type="file" id="upload-file-input">
         <button onclick="uploadImage()">Загрузить</button>
     </div>
 
     <div class="section">
-        <h2>2. Получить/Удалить изображение (GET/DELETE /image/{id})</h2>
+        <h2>2. Получить/Удалить изображение</h2>
         <input type="text" id="image-id-input" placeholder="Введите Image ID">
         <button onclick="getImage()">Получить информацию</button>
         <button onclick="deleteImage()" style="background-color: #d9534f;">Удалить</button>
@@ -149,27 +149,29 @@
             header.textContent = `Изображение обработано! (ID: ${image.ID})`;
             responseBox.appendChild(header);
 
-            if (image.ProcessedPathResize.Valid) {
+            // Проверяем, существует ли ссылка (не null)
+            if (image.ProcessedPathResize) { // <-- Проверяем на существование
                 const resizeLink = document.createElement('a');
-                resizeLink.href = `${API_URL}/${image.ProcessedPathResize.String}`;
+                // Строим полный URL с API_URL
+                resizeLink.href = `${API_URL}/${image.ProcessedPathResize}`;
                 resizeLink.textContent = 'Скачать измененное изображение';
-                resizeLink.target = "_blank"; // Открывать в новой вкладке
+                resizeLink.target = "_blank";
                 responseBox.appendChild(resizeLink);
                 responseBox.appendChild(document.createElement('br'));
             }
 
-            if (image.ProcessedPathThumbnail.Valid) {
+            if (image.ProcessedPathThumbnail) {
                 const thumbnailLink = document.createElement('a');
-                thumbnailLink.href = `${API_URL}/${image.ProcessedPathThumbnail.String}`;
+                thumbnailLink.href = `${API_URL}/${image.ProcessedPathThumbnail}`;
                 thumbnailLink.textContent = 'Скачать миниатюру';
                 thumbnailLink.target = "_blank";
                 responseBox.appendChild(thumbnailLink);
                 responseBox.appendChild(document.createElement('br'));
             }
 
-            if (image.ProcessedPathWatermark.Valid) {
+            if (image.ProcessedPathWatermark) {
                 const watermarkLink = document.createElement('a');
-                watermarkLink.href = `${API_URL}/${image.ProcessedPathWatermark.String}`;
+                watermarkLink.href = `${API_URL}/${image.ProcessedPathWatermark}`;
                 watermarkLink.textContent = 'Скачать изображение с водяным знаком';
                 watermarkLink.target = "_blank";
                 responseBox.appendChild(watermarkLink);

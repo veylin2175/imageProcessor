@@ -24,6 +24,17 @@ type ImageGetter interface {
 	GetImage(ctx context.Context, id uuid.UUID) (*models.Image, error)
 }
 
+// GetImage retrieves an image metadata by ID.
+// @Summary      Get image metadata
+// @Description  Retrieves an image's metadata (status, paths) by its ID.
+// @Tags         images
+// @Produce      json
+// @Param        id   path      string  true  "Image ID"
+// @Success      200  {object}  getImage.Response
+// @Failure      400  {object}  response.Response
+// @Failure      404  {object}  response.Response
+// @Failure      500  {object}  response.Response
+// @Router       /image/{id} [get]
 func New(log *slog.Logger, imageGetter ImageGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.image.getImage.New"

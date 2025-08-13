@@ -27,6 +27,17 @@ type ImageSaver interface {
 	SaveImage(ctx context.Context, filename string, originalPath string) (*models.Image, error)
 }
 
+// SaveImage uploads an image for processing.
+// @Summary      Uploads an image
+// @Description  Uploads an image file and returns its ID
+// @Tags         images
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        image  formData  file  true  "Image file to upload"
+// @Success      200  {object}  saveImage.ImageResponse
+// @Failure      400  {object}  response.Response
+// @Failure      500  {object}  response.Response
+// @Router       /upload [post]
 func New(log *slog.Logger, imageSaver ImageSaver, kafkaProducer producer.ProducerIface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.image.saveImage.New"
