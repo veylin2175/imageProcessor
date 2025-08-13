@@ -27,7 +27,7 @@ type ImageSaver interface {
 	SaveImage(ctx context.Context, filename string, originalPath string) (*models.Image, error)
 }
 
-func New(log *slog.Logger, imageSaver ImageSaver, kafkaProducer *producer.Producer) http.HandlerFunc {
+func New(log *slog.Logger, imageSaver ImageSaver, kafkaProducer producer.ProducerIface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.image.saveImage.New"
 

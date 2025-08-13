@@ -88,7 +88,7 @@ func (s *Storage) GetImage(ctx context.Context, id uuid.UUID) (*models.Image, er
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("%s: image with ID %s not found", op, id)
+			return nil, fmt.Errorf("%s: image with ID %s not found: %w", op, id, sql.ErrNoRows)
 		}
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}

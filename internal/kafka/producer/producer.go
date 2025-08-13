@@ -8,6 +8,12 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
+//go:generate go run github.com/vektra/mockery/v2@v2.51.1 --name=ProducerIface
+type ProducerIface interface {
+	SendMessage(ctx context.Context, message []byte) error
+	Close() error
+}
+
 type Producer struct {
 	writer *kafka.Writer
 	log    *slog.Logger

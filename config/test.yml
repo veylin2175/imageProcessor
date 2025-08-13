@@ -1,0 +1,21 @@
+env: "local"
+
+database:
+  host: "db"
+  port: 5432
+  user: "test_user"
+  password: "test_password"
+  dbname: "test_db"
+  sslmode: "disable"
+
+http_server:
+  address: "0.0.0.0:8075"
+  timeout: 4s
+  idle_timeout: 60s
+
+kafka:
+  brokers: ["kafka:9092"]
+  topic: "test_topic"
+  group_id: "image-processor-test"
+  auto_offset_reset: "earliest"
+  max_poll_records: 1
