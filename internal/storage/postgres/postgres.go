@@ -72,6 +72,10 @@ func (s *Storage) GetImage(ctx context.Context, id uuid.UUID) (*models.Image, er
         FROM images
         WHERE id = $1`
 
+	var processedPathResize sql.NullString
+	var processedPathThumbnail sql.NullString
+	var processedPathWatermark sql.NullString
+
 	image := &models.Image{}
 
 	err := s.DB.QueryRowContext(ctx, query, id).Scan(
@@ -79,9 +83,9 @@ func (s *Storage) GetImage(ctx context.Context, id uuid.UUID) (*models.Image, er
 		&image.Filename,
 		&image.Status,
 		&image.OriginalPath,
-		&image.ProcessedPathResize,
-		&image.ProcessedPathThumbnail,
-		&image.ProcessedPathWatermark,
+		&processedPathResize,
+		&processedPathThumbnail,
+		&processedPathWatermark,
 		&image.CreatedAt,
 		&image.UpdatedAt,
 	)
@@ -91,6 +95,16 @@ func (s *Storage) GetImage(ctx context.Context, id uuid.UUID) (*models.Image, er
 			return nil, fmt.Errorf("%s: image with ID %s not found: %w", op, id, sql.ErrNoRows)
 		}
 		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	if processedPathResize.Valid {
+		image.ProcessedPathResize = &processedPathResize.String
+	}
+	if processedPathThumbnail.Valid {
+		image.ProcessedPathThumbnail = &processedPathThumbnail.String
+	}
+	if processedPathWatermark.Valid {
+		image.ProcessedPathWatermark = &processedPathWatermark.String
 	}
 
 	return image, nil

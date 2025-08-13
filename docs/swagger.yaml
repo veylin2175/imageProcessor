@@ -1,0 +1,149 @@
+basePath: /
+definitions:
+  getImage.Response:
+    properties:
+      error:
+        type: string
+      image:
+        $ref: '#/definitions/models.Image'
+      status:
+        type: string
+    type: object
+  models.Image:
+    properties:
+      CreatedAt:
+        type: string
+      Filename:
+        type: string
+      ID:
+        type: string
+      OriginalPath:
+        type: string
+      ProcessedPathResize:
+        description: <-- Изменили
+        type: string
+      ProcessedPathThumbnail:
+        description: <-- Изменили
+        type: string
+      ProcessedPathWatermark:
+        description: <-- Изменили
+        type: string
+      Status:
+        type: string
+      UpdatedAt:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      error:
+        type: string
+      status:
+        type: string
+    type: object
+  saveImage.ImageResponse:
+    properties:
+      error:
+        type: string
+      image_id:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:8075
+info:
+  contact: {}
+  description: This is a sample image processing API.
+  title: Image Processor API
+  version: "1.0"
+paths:
+  /image/{id}:
+    delete:
+      description: Deletes an image and all its processed versions from the storage
+      parameters:
+      - description: Image ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete an image
+      tags:
+      - images
+    get:
+      description: Retrieves an image's metadata (status, paths) by its ID.
+      parameters:
+      - description: Image ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/getImage.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get image metadata
+      tags:
+      - images
+  /upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads an image file and returns its ID
+      parameters:
+      - description: Image file to upload
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/saveImage.ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Uploads an image
+      tags:
+      - images
+swagger: "2.0"

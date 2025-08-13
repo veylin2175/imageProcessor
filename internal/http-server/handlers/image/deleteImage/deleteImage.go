@@ -22,6 +22,17 @@ type Response struct {
 	response.Response
 }
 
+// DeleteImage deletes an image by its ID.
+// @Summary      Delete an image
+// @Description  Deletes an image and all its processed versions from the storage
+// @Tags         images
+// @Produce      json
+// @Param        id   path      string  true  "Image ID"
+// @Success      200  {object}  response.Response
+// @Failure      400  {object}  response.Response
+// @Failure      404  {object}  response.Response
+// @Failure      500  {object}  response.Response
+// @Router       /image/{id} [delete]
 func New(log *slog.Logger, imageDeleter ImageDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.image.deleteImage.New"
